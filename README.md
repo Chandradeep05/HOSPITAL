@@ -105,7 +105,7 @@ Then open your browser and go to:
 ### 📸 Screenshots
 ![Login Page](static/images/login_screenshot.jpg)
 ![Dashboard](static/images/dashboard_screenshot.jpg)
-![Register Patient](static/images/register_patient_screenshot.jpg)
+![Register Patient](static/images/register_pateint_screenshot.jpg)
 ![View Patients](static/images/view_patient_screenshot.jpg)
 ![View Doctors](static/images/view_doctor_screenshot.jpg)
 ![View Workers](static/images/view_worker_screenshot.jpg)
