@@ -20,7 +20,7 @@ A simple web-based system built with **Flask** to manage hospital staff, patient
 
 - **Backend**: Python (Flask)  
 - **Frontend**: HTML, CSS, JS  
-- **Database**: SQLite3  
+- **Database**: MySQL
 - **Templating**: Jinja2  
 
 ---
