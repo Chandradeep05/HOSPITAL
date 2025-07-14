@@ -55,80 +55,46 @@ hospital-staff-management/
 ├── hospital.db
 └── README.md
 
-yaml
-Copy
-Edit
-
 ---
 
 ## 🚀 Getting Started
 
 ### 1. Clone the Repository
-
-```bash
 git clone https://github.com/Chandradeep05/HOSPITAL.git
 cd HOSPITAL
-2. (Optional) Set up Virtual Environment
-bash
-Copy
-Edit
+### 2. (Optional) Set up Virtual Environment
 python -m venv venv
 venv\Scripts\activate      # On Windows
 # OR
 source venv/bin/activate   # On Linux/Mac
-3. Install Required Packages
-bash
-Copy
-Edit
+### 3. Install Required Packages
 pip install flask
-4. Run the Application
-bash
-Copy
-Edit
+### 4. Run the Application
 python hospital.py
 Then open your browser and go to:
 📎 http://127.0.0.1:5000
 
-📸 Screenshots
-🔽 If you want to show screenshots, upload the image to your GitHub repo first and use the correct path like:
-
-md
-Copy
-Edit
+### 📸 Screenshots
 ![Login Page](static/images/login_bg.jpg)
 ![Dashboard](static/images/dashboard_bg.jpg)
-✨ Future Improvements
-Add role-based authentication (Admin, Staff)
+### ✨ Future Improvements
+* Add role-based authentication (Admin, Staff)
 
-Appointment scheduling module
+* Appointment scheduling module
 
-Export reports (CSV/PDF)
+* Export reports (CSV/PDF)
 
-Billing and payment integration
+* Billing and payment integration
 
-Add unit tests and validations
+* Add unit tests and validations
 
-🤝 Contribution
+### 🤝 Contribution
 Feel free to fork this repo, make changes, and open a pull request.
 Make sure your changes are tested and documented properly.
 
-📄 License
+### 📄 License
 This project is licensed under the MIT License.
 
-🙌 Acknowledgements
+### 🙌 Acknowledgements
 Thanks to the open-source community and Flask documentation contributors.
 
-yaml
-Copy
-Edit
-
----
-
-## 📌 How to Preview on GitHub
-
-1. Make sure the file is named exactly `README.md`  
-2. Commit and push it:
-   ```bash
-   git add README.md
-   git commit -m "Add complete README with correct formatting"
-   git push
