@@ -71,12 +71,13 @@ source venv/bin/activate   # On Linux/Mac
 pip install flask
 ### 4. Run the Application
 python hospital.py
+
 Then open your browser and go to:
 📎 http://127.0.0.1:5000
 
 ### 📸 Screenshots
-![Login Page](static/images/login_bg.jpg)
-![Dashboard](static/images/dashboard_bg.jpg)
+![Login Page](static/images/login_screenshot.jpg)
+![Dashboard](static/images/dashboard_screenshot.jpg)
 ### ✨ Future Improvements
 * Add role-based authentication (Admin, Staff)
 
