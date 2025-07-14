@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Hospital Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+    body {
+        background-image: url('{{ url_for('static', filename='images/dashboard_bg.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dashboard-container {
+        background-color: rgba(122, 120, 120, 0); /* semi-transparent white */
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .dashboard-links a {
+        display: block;
+        margin: 10px 0;
+        color: #2b8a3e;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .dashboard-links a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>🏥 Welcome to the Hospital Dashboard</h1>
+        <p>Please choose an action:</p>
+
+        <div class="dashboard-links">
+            <!-- Register -->
+            <a href="{{ url_for('register_patient') }}">Register Patient</a>
+            <a href="{{ url_for('register_doctor') }}">Register Doctor</a>
+            <a href="{{ url_for('register_worker') }}">Register Worker</a>
+
+            <!-- View -->
+            <a href="{{ url_for('view_patients') }}">View Patients</a>
+            <a href="{{ url_for('view_doctors') }}">View Doctors</a>
+            <a href="{{ url_for('view_workers') }}">View Workers</a>
+
+            <!-- Utilities -->
+            <a href="{{ url_for('search') }}">Search a Record</a>
+            <a href="{{ url_for('delete_record') }}">Delete a Record</a>
+
+            <!-- Logout -->
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

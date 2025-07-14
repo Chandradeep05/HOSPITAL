@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hospital Management</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Hospital Management System</h1>
+
+    <div class="form-section">
+        <h2>Add Patient</h2>
+        <form id="patientForm">
+            <input name="name" placeholder="Name" required>
+            <input name="age" type="number" placeholder="Age" required>
+            <input name="problem" placeholder="Problem" required>
+            <input name="phone" placeholder="Phone" required>
+            <input name="id" placeholder="ID" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="form-section">
+        <h2>Add Doctor</h2>
+        <form id="doctorForm">
+            <input name="name" placeholder="Name" required>
+            <input name="age" type="number" placeholder="Age" required>
+            <input name="department" placeholder="Department" required>
+            <input name="phone" placeholder="Phone" required>
+            <input name="id" placeholder="ID" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="form-section">
+        <h2>Add Worker</h2>
+        <form id="workerForm">
+            <input name="name" placeholder="Name" required>
+            <input name="age" type="number" placeholder="Age" required>
+            <input name="work_type" placeholder="Work Type" required>
+            <input name="phone" placeholder="Phone" required>
+            <input name="id" placeholder="ID" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>View Data</h2>
+        <button onclick="getData('patient')">Show Patients</button>
+        <button onclick="getData('doctor')">Show Doctors</button>
+        <button onclick="getData('worker')">Show Workers</button>
+        <pre id="output"></pre>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

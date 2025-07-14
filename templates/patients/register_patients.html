@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register Patient</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    body {
+        background: url('{{ url_for('static', filename='images/patient_bg.jpg') }}') no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.9); /* Slight white overlay for readability */
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .icon-input {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .icon-input i {
+        margin-right: 10px;
+    }
+
+    input, select {
+        flex: 1;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #2b8a3e;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #23732f;
+    }
+
+    h2 {
+        text-align: center;
+        color: #2b8a3e;
+    }
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fa-solid fa-user-plus"></i> Register Patient</h2>
+        <form method="POST">
+            <div class="icon-input"><i class="fa fa-user"></i><input type="text" name="name" placeholder="Full Name" required></div>
+            <div class="icon-input"><i class="fa fa-id-badge"></i><input type="text" name="id" placeholder="Patient ID" required></div>
+            <div class="icon-input"><i class="fa fa-hashtag"></i><input type="number" name="age" placeholder="Age" required></div>
+            <div class="icon-input"><i class="fa fa-venus-mars"></i>
+                <select name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="icon-input"><i class="fa fa-phone"></i><input type="tel" name="phone" placeholder="Phone Number" required></div>
+            <div class="icon-input"><i class="fa fa-notes-medical"></i><input type="text" name="diagnosis" placeholder="Diagnosis" required></div>
+            <button type="submit">Register</button>
+        </form>
+
+    </div>
+</body>
+</html>

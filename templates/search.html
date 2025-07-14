@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('{{ url_for('static', filename='images/search_bg.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .search-container {
+            background: #f9f9f9;
+            padding: 30px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            width: 600px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #2b8a3e;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            text-align: left;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2b8a3e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #23732f;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #d6eadf;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2b8a3e;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            margin-top: 15px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="search-container">
+    <h1>Search Records</h1>
+
+    <form method="POST">
+        <label for="record_type">Type:</label>
+        <select name="record_type" id="record_type" required>
+            <option value="">--Select--</option>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="worker">Worker</option>
+        </select>
+
+        <label for="query">Query:</label>
+        <input type="text" name="query" id="query" required>
+
+        <button type="submit">Search</button>
+    </form>
+
+    {% if search_performed %}
+        {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        {% if record_type == 'patient' %}
+                            <th>Name</th><th>Age</th><th>Issue</th><th>Phone</th><th>ID</th><th>Gender</th>
+                        {% elif record_type == 'doctor' %}
+                            <th>Name</th><th>Age</th><th>Department</th><th>Phone</th><th>ID</th>
+                        {% elif record_type == 'worker' %}
+                            <th>Name</th><th>Age</th><th>Position</th><th>Phone</th><th>ID</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                        <tr>
+                            {% for item in row %}
+                                <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-results">No records found.</p>
+        {% endif %}
+    {% endif %}
+
+    <a class="back-link" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

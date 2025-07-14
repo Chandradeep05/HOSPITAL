@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record Deleted</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for('static', filename='images/delete_bg.png') }}') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirmation-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15);
+            max-width: 400px;
+        }
+
+        h2 {
+            color: #2b8a3e;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #444;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2b8a3e;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #195e26;
+        }
+    </style>
+</head>
+<body>
+
+<div class="confirmation-box">
+    <h2>Record Deleted</h2>
+    <p>{{ record_type }} with ID {{ record_id }} has been successfully deleted.</p>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

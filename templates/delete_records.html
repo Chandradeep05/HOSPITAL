@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Record</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for('static', filename='images/delete_bg.png') }}') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .delete-container {
+            background: rgba(255, 255, 255, 0.95); /* Slight transparency */
+            padding: 30px 25px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #2b8a3e;
+            font-size: 24px;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            text-align: left;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2b8a3e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #23732f;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2b8a3e;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+            color: #195e26;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="delete-container">
+        <h2>Delete a Record</h2>
+        <form method="POST">
+            <label for="record_type">Select Record Type:</label>
+            <select name="record_type" id="record_type" required>
+                <option value="">--Select--</option>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="worker">Worker</option>
+            </select>
+
+            <label for="record_id">Record ID:</label>
+            <input type="text" name="record_id" id="record_id" required>
+
+            <button type="submit">Delete</button>
+        </form>
+
+        <a class="back-link" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </div>
+
+</body>
+</html>
