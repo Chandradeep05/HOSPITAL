@@ -28,32 +28,59 @@ A simple web-based system built with **Flask** to manage hospital staff, patient
 ## 📂 Folder Structure
 
 hospital-staff-management/
+
 │
+
 ├── static/
+
 │ ├── images/
+
 │ ├── style.css
+
 │ └── script.js
+
 │
+
 ├── templates/
+
 │ ├── dashboard.html
+
 │ ├── login.html
+
 │ ├── index.html
+
 │ ├── delete_records.html
+
 │ ├── delete_confirmation.html
+
 │ ├── search.html
+
 │ ├── doctors/
+
 │ │ ├── register_doctor.html
+
 │ │ └── view_doctors.html
+
 │ ├── patients/
+
 │ │ ├── register_patients.html
+
 │ │ └── view_patients.html
+
 │ └── workers/
+
 │ ├── register_worker.html
+
 │ └── view_workers.html
+
 │
+
 ├── hospital.py
+
 ├── hospital.db
+
 └── README.md
+
 
 ---
 
