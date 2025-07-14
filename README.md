@@ -108,7 +108,7 @@ Then open your browser and go to:
 ![Register Patient](static/images/register_patient_screenshot.jpg)
 ![View Patients](static/images/view_patient_screenshot.jpg)
 ![View Doctors](static/images/view_doctor_screenshot.jpg)
-![View Workers](static/images/view_doctor_screenshot.jpg)
+![View Workers](static/images/view_worker_screenshot.jpg)
 ![Seacrh Record](static/images/search_screenshot.jpg)
 ![Delete Record](static/images/delete_screenshot.jpg)
 
