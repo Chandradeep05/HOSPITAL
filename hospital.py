@@ -140,7 +140,7 @@ def init_db():
         db.session.commit()
         print("[HSMS] 'role' column added to users table.")
     except Exception:
-        pass  # Column already exists — safe to ignore
+        db.session.rollback()  # Column already exists — rollback to clean transaction for Postgres
 
     # Phase 7 migration: add working-hour columns to doctor_details if missing
     for _col in ('start_time', 'end_time'):
@@ -148,7 +148,7 @@ def init_db():
             db.session.execute(db.text(f"ALTER TABLE doctor_details ADD COLUMN {_col} VARCHAR(5)"))
             db.session.commit()
         except Exception:
-            pass  # Column already exists — safe to ignore
+            db.session.rollback()  # Column already exists — rollback to clean transaction for Postgres
 
     # Phase 9 migration: soft-delete + audit columns
     _migrations = [
@@ -169,7 +169,7 @@ def init_db():
             db.session.commit()
             print(f"[HSMS] '{_col_name}' added to {_table}.")
         except Exception:
-            pass  # Already exists — safe to ignore
+            db.session.rollback()  # Already exists — rollback to clean transaction for Postgres
 
     # Read credentials from environment variables (production) or fall back to defaults (dev)
     default_username = os.environ.get('HSMS_ADMIN_USER', 'Chandradeep05')
