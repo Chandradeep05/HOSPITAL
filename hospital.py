@@ -26,7 +26,7 @@ if not _secret:
 app.secret_key = _secret
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'hospital.db')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', f"sqlite:///{os.path.join(BASE_DIR, 'hospital.db')}")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -1023,15 +1023,10 @@ def export_csv(entity):
 # ──────────────────────────────────────────────
 
 # FIX: module-level so Gunicorn triggers it on import (not just __main__).
-# FIX: wrapped in try/except — a DB error logs clearly instead of crashing the worker.
-try:
-    with app.app_context():
-        init_db()
-        seed_data()
-except Exception as _init_err:
-    logging.error(f'[HSMS] STARTUP ERROR — DB init failed: {_init_err}')
-    logging.error('[HSMS] App will still start; DB may be unavailable until next restart.')
-    # Do NOT re-raise: let Gunicorn keep the worker alive so Render doesn't spin-crash-loop.
+# FIX: removed try/except so DB init failures crash loudly and appear in Render logs.
+with app.app_context():
+    init_db()
+    seed_data()
 
 
 # ──────────────────────────────────────────────
