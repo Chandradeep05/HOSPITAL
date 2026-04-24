@@ -9,6 +9,7 @@ import os
 import csv
 import io
 import warnings
+import logging
 
 load_dotenv()  # Load .env file into environment before any os.getenv() calls
 
@@ -238,7 +239,7 @@ def seed_data():
 
     # ── Appointments (spread across past + future dates) ──
     today = date_type.today()
-    from datetime import timedelta
+    # FIX: timedelta is already imported at top level — removed redundant inline import
     appointments = [
         # Today
         Appointment(patient_id='P001', doctor_id='D001', appt_date=today.strftime('%Y-%m-%d'),               appt_time='09:00', reason='Follow-up checkup',       status='Scheduled'),
@@ -376,7 +377,13 @@ def auth():
     username = request.form.get('username', '').strip()
     password = request.form.get('password', '').strip()
 
-    user = User.query.filter_by(username=username).first()
+    # FIX: wrap DB query so a database error shows a safe message instead of a 500
+    try:
+        user = User.query.filter_by(username=username).first()
+    except Exception as e:
+        logging.error(f'[HSMS] DB error during login for "{username}": {e}')
+        return render_template('login.html', error='System is starting up. Please try again in a moment.')
+
     if user and bcrypt.check_password_hash(user.password, password):
         session['user'] = user.username
         session['role'] = user.role or 'admin'   # store role for RBAC checks
@@ -1015,11 +1022,16 @@ def export_csv(entity):
 # DB Init — runs on every startup (gunicorn + python hospital.py)
 # ──────────────────────────────────────────────
 
-# This block is at MODULE LEVEL so Gunicorn triggers it on import.
-# init_db() and seed_data() are both idempotent — safe to call every time.
-with app.app_context():
-    init_db()
-    seed_data()
+# FIX: module-level so Gunicorn triggers it on import (not just __main__).
+# FIX: wrapped in try/except — a DB error logs clearly instead of crashing the worker.
+try:
+    with app.app_context():
+        init_db()
+        seed_data()
+except Exception as _init_err:
+    logging.error(f'[HSMS] STARTUP ERROR — DB init failed: {_init_err}')
+    logging.error('[HSMS] App will still start; DB may be unavailable until next restart.')
+    # Do NOT re-raise: let Gunicorn keep the worker alive so Render doesn't spin-crash-loop.
 
 
 # ──────────────────────────────────────────────
