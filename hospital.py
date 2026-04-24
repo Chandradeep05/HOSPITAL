@@ -1012,11 +1012,19 @@ def export_csv(entity):
 
 
 # ──────────────────────────────────────────────
-# Entry Point
+# DB Init — runs on every startup (gunicorn + python hospital.py)
+# ──────────────────────────────────────────────
+
+# This block is at MODULE LEVEL so Gunicorn triggers it on import.
+# init_db() and seed_data() are both idempotent — safe to call every time.
+with app.app_context():
+    init_db()
+    seed_data()
+
+
+# ──────────────────────────────────────────────
+# Entry Point (local dev only)
 # ──────────────────────────────────────────────
 
 if __name__ == '__main__':
-    with app.app_context():
-        init_db()
-        seed_data()
     app.run(debug=os.getenv('FLASK_DEBUG', '0') == '1')
