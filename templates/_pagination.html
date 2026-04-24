@@ -1,0 +1,52 @@
+{% macro render_pagination(pagination, endpoint) %}
+{% if pagination.pages > 1 %}
+<div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:18px;flex-wrap:wrap;">
+    {# Previous #}
+    {% if pagination.has_prev %}
+    <a href="{{ url_for(endpoint, page=pagination.prev_num) }}"
+       style="padding:6px 14px;background:#2b8a3e;color:white;border-radius:4px;text-decoration:none;font-size:13px;font-weight:bold;">
+       &laquo; Prev
+    </a>
+    {% else %}
+    <span style="padding:6px 14px;background:#ccc;color:#888;border-radius:4px;font-size:13px;cursor:not-allowed;">
+        &laquo; Prev
+    </span>
+    {% endif %}
+
+    {# Page numbers #}
+    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if p %}
+            {% if p == pagination.page %}
+            <span style="padding:6px 12px;background:#2b8a3e;color:white;border-radius:4px;font-size:13px;font-weight:bold;">
+                {{ p }}
+            </span>
+            {% else %}
+            <a href="{{ url_for(endpoint, page=p) }}"
+               style="padding:6px 12px;background:#f0f0f0;color:#333;border-radius:4px;text-decoration:none;font-size:13px;">
+               {{ p }}
+            </a>
+            {% endif %}
+        {% else %}
+        <span style="font-size:13px;color:#999;">…</span>
+        {% endif %}
+    {% endfor %}
+
+    {# Next #}
+    {% if pagination.has_next %}
+    <a href="{{ url_for(endpoint, page=pagination.next_num) }}"
+       style="padding:6px 14px;background:#2b8a3e;color:white;border-radius:4px;text-decoration:none;font-size:13px;font-weight:bold;">
+       Next &raquo;
+    </a>
+    {% else %}
+    <span style="padding:6px 14px;background:#ccc;color:#888;border-radius:4px;font-size:13px;cursor:not-allowed;">
+        Next &raquo;
+    </span>
+    {% endif %}
+
+    <span style="font-size:12px;color:#888;margin-left:6px;">
+        Page {{ pagination.page }} of {{ pagination.pages }}
+        &nbsp;({{ pagination.total }} records)
+    </span>
+</div>
+{% endif %}
+{% endmacro %}

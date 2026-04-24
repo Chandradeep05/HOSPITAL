@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% from '_pagination.html' import render_pagination %}
 <head>
     <meta charset="UTF-8">
     <title>Registered Workers</title>
@@ -89,16 +90,24 @@
                         <th>Role</th>
                         <th>Phone</th>
                         <th>ID</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for worker in workers %}
                     <tr>
-                        <td>{{ worker[0] }}</td>
-                        <td>{{ worker[1] }}</td>
-                        <td>{{ worker[2] }}</td>
-                        <td>{{ worker[3] }}</td>
-                        <td>{{ worker[4] }}</td>
+                        <td>{{ worker.name }}</td>
+                        <td>{{ worker.age }}</td>
+                        <td>{{ worker.work_type or '—' }}</td>
+                        <td>{{ worker.phone or '—' }}</td>
+                        <td>{{ worker.id }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_worker', wid=worker.id) }}"
+                               style="background:#2b8a3e;color:white;padding:5px 12px;
+                                      border-radius:4px;text-decoration:none;font-size:13px;">
+                               <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -106,6 +115,9 @@
         </div>
         {% else %}
             <p>No worker records found.</p>
+        {% endif %}
+        {% if pagination %}
+        {{ render_pagination(pagination, 'view_workers') }}
         {% endif %}
 
         <a href="{{ url_for('dashboard') }}" class="back-button">Back to Dashboard</a>

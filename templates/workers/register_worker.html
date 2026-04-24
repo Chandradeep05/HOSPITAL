@@ -68,11 +68,20 @@
     <div class="container">
         <h2><i class="fa-solid fa-user-gear"></i> Register Worker</h2>
         <form method="POST">
-            <div class="icon-input"><i class="fa fa-user"></i><input type="text" name="name" placeholder="Full Name" required></div>
-            <div class="icon-input"><i class="fa fa-id-badge"></i><input type="text" name="id" placeholder="Worker ID" required></div>
-            <div class="icon-input"><i class="fa fa-hashtag"></i><input type="number" name="age" placeholder="Age" required></div>
-            <div class="icon-input"><i class="fa fa-briefcase"></i><input type="text" name="work_type" placeholder="Work Type" required></div>
-            <div class="icon-input"><i class="fa fa-phone"></i><input type="text" name="phone" placeholder="Phone" required></div>
+            {% if errors %}
+            <div style="background:#ffe3e3;border-left:4px solid #e03131;padding:10px 14px;
+                        border-radius:5px;margin-bottom:14px;font-size:13px;color:#c92a2a;">
+                <strong>Please fix:</strong>
+                <ul style="margin:4px 0 0 0;padding-left:18px;">
+                    {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            <div class="icon-input"><i class="fa fa-user"></i><input type="text" name="name" placeholder="Full Name" value="{{ form.name if form else '' }}" required></div>
+            <div class="icon-input"><i class="fa fa-id-badge"></i><input type="text" name="id" placeholder="Worker ID" value="{{ form.id if form else '' }}" required></div>
+            <div class="icon-input"><i class="fa fa-hashtag"></i><input type="number" name="age" placeholder="Age" value="{{ form.age if form else '' }}" min="1" max="120" required></div>
+            <div class="icon-input"><i class="fa fa-briefcase"></i><input type="text" name="work_type" placeholder="Work Type" value="{{ form.work_type if form else '' }}" required></div>
+            <div class="icon-input"><i class="fa fa-phone"></i><input type="text" name="phone" placeholder="Phone" value="{{ form.phone if form else '' }}"></div>
             <button type="submit">Register</button>
         </form>
     </div>

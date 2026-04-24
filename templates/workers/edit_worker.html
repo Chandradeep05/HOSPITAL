@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Worker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    body {
+        background: url('{{ url_for('static', filename='images/worker_bg.jpg') }}') no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.92);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        max-width: 420px;
+        width: 100%;
+    }
+    h2 { text-align: center; color: #2b8a3e; margin-bottom: 20px; }
+    .icon-input {
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+    }
+    .icon-input i { margin-right: 10px; color: #555; }
+    input, select {
+        flex: 1;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+    .id-display {
+        flex: 1;
+        padding: 10px;
+        border-radius: 5px;
+        background: #e9ecef;
+        border: 1px solid #ccc;
+        color: #666;
+        font-size: 14px;
+    }
+    .btn-row { display: flex; gap: 10px; margin-top: 5px; }
+    button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .btn-save  { background-color: #2b8a3e; color: white; }
+    .btn-save:hover  { background-color: #23732f; }
+    .btn-cancel { background-color: #6c757d; color: white; text-decoration: none;
+                  display: flex; align-items: center; justify-content: center; border-radius: 5px; }
+    .btn-cancel:hover { background-color: #5a6268; }
+    .errors {
+        background: #ffe3e3;
+        border-left: 4px solid #e03131;
+        padding: 10px 14px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #c92a2a;
+    }
+    .errors ul { margin: 4px 0 0 0; padding-left: 18px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fa-solid fa-user-gear"></i> Edit Worker</h2>
+
+        {% if errors %}
+        <div class="errors">
+            <strong>Please fix the following:</strong>
+            <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="icon-input">
+                <i class="fa fa-id-badge"></i>
+                <span class="id-display">ID: {{ worker.id }}</span>
+            </div>
+            <div class="icon-input">
+                <i class="fa fa-user"></i>
+                <input type="text" name="name" placeholder="Full Name" value="{{ worker.name }}" required>
+            </div>
+            <div class="icon-input">
+                <i class="fa fa-hashtag"></i>
+                <input type="number" name="age" placeholder="Age" value="{{ worker.age }}" min="1" max="120" required>
+            </div>
+            <div class="icon-input">
+                <i class="fa fa-briefcase"></i>
+                <input type="text" name="work_type" placeholder="Work Type" value="{{ worker.work_type or '' }}" required>
+            </div>
+            <div class="icon-input">
+                <i class="fa fa-phone"></i>
+                <input type="tel" name="phone" placeholder="Phone Number" value="{{ worker.phone or '' }}">
+            </div>
+
+            <div class="btn-row">
+                <button type="submit" class="btn-save"><i class="fa fa-save"></i> Save Changes</button>
+                <a href="{{ url_for('view_workers') }}" class="btn-cancel"><i class="fa fa-times"></i>&nbsp;Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

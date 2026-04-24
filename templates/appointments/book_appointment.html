@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Book Appointment - Hospital Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: url('{{ url_for('static', filename='images/dashboard_bg.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.93);
+            padding: 35px 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            max-width: 460px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2b8a3e;
+            margin-bottom: 22px;
+            font-size: 24px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .field i {
+            color: #555;
+            width: 18px;
+            text-align: center;
+        }
+
+        .field select,
+        .field input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .field textarea {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        button.btn-book {
+            flex: 1;
+            padding: 11px;
+            background-color: #2b8a3e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.btn-book:hover {
+            background-color: #23732f;
+        }
+
+        button.btn-book:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        a.btn-back {
+            flex: 1;
+            padding: 11px;
+            background-color: #6c757d;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        a.btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        .errors {
+            background: #ffe3e3;
+            border-left: 4px solid #e03131;
+            padding: 10px 14px;
+            border-radius: 5px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            color: #c92a2a;
+        }
+
+        .errors ul {
+            margin: 4px 0 0;
+            padding-left: 18px;
+        }
+
+        label {
+            font-size: 13px;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .field-group {
+            margin-bottom: 14px;
+        }
+
+        .field-group .field {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2><i class="fa-solid fa-calendar-plus"></i> Book Appointment</h2>
+
+        {% if errors %}
+        <div class="errors">
+            <strong>Please fix the following:</strong>
+            <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <div class="field-group">
+                <label><i class="fa fa-user"></i> Patient</label>
+                <div class="field">
+                    <select name="patient_id" required>
+                        <option value="">-- Select Patient --</option>
+                        {% for p in patients %}
+                        <option value="{{ p.id }}" {% if request.form.patient_id==p.id %}selected{% endif %}>
+                            {{ p.name }} ({{ p.id }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fa fa-user-doctor"></i> Doctor</label>
+                <div class="field">
+                    <select name="doctor_id" required>
+                        <option value="">-- Select Doctor --</option>
+                        {% for d in doctors %}
+                        <option value="{{ d.id }}" {% if request.form.doctor_id==d.id %}selected{% endif %}>
+                            Dr. {{ d.name }} &mdash; {{ d.department or 'General' }} ({{ d.id }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fa fa-calendar"></i> Date</label>
+                <div class="field">
+                    <input type="date" name="appt_date" required min="{{ today }}"
+                        value="{{ request.form.appt_date if request.form.appt_date else '' }}">
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fa fa-clock"></i> Available Time Slot</label>
+                <div class="field">
+                    <select name="appt_time" id="appt_time" required disabled
+                            style="color:#adb5bd;">
+                        <option value="">-- select doctor &amp; date first --</option>
+                    </select>
+                </div>
+                <small id="slot_msg" style="font-size:12px;color:#868e96;margin-left:28px;"></small>
+            </div>
+
+            <div class="field-group">
+                <label><i class="fa fa-notes-medical"></i> Reason (optional)</label>
+                <div class="field">
+                    <textarea name="reason"
+                        placeholder="Reason for visit...">{{ request.form.reason if request.form.reason else '' }}</textarea>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button type="submit" class="btn-book" id="submitBtn" disabled>
+                    <i class="fa fa-check"></i> Book Appointment
+                </button>
+                <a href="{{ url_for('dashboard') }}" class="btn-back">
+                    <i class="fa fa-arrow-left"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+<script>
+(function () {
+    var patSel    = document.querySelector('select[name="patient_id"]');
+    var docSel    = document.querySelector('select[name="doctor_id"]');
+    var dateSel   = document.querySelector('input[name="appt_date"]');
+    var slotSel   = document.getElementById('appt_time');
+    var slotMsg   = document.getElementById('slot_msg');
+    var submitBtn = document.getElementById('submitBtn');
+
+    /* pre-fill values preserved across a POST validation error */
+    var preDoctor = "{{ request.form.get('doctor_id','') | e }}";
+    var preDate   = "{{ request.form.get('appt_date','')  | e }}";
+    var preSlot   = "{{ request.form.get('appt_time','')  | e }}";
+
+    function checkReady() {
+        submitBtn.disabled = !(patSel.value && docSel.value && dateSel.value && slotSel.value);
+    }
+
+    function loadSlots(doctorId, date, preselect) {
+        slotSel.innerHTML = '<option value="">-- loading... --</option>';
+        slotSel.disabled  = true;
+        slotSel.style.color = '#adb5bd';
+        slotMsg.textContent = '';
+        checkReady();
+
+        fetch('/get_slots?doctor_id=' + encodeURIComponent(doctorId)
+                        + '&date='      + encodeURIComponent(date))
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var slots = data.slots || [];
+                if (slots.length === 0) {
+                    slotSel.innerHTML = '<option value="">No slots available</option>';
+                    slotMsg.textContent = 'No available slots for this date.';
+                    slotMsg.style.color = '#e67700';
+                } else {
+                    slotSel.innerHTML = '<option value="">-- choose a slot --</option>';
+                    slotSel.style.color = '';
+                    slots.forEach(function(s) {
+                        var o = document.createElement('option');
+                        o.value = s;
+                        o.textContent = s;
+                        if (s === preselect) { o.selected = true; }
+                        slotSel.appendChild(o);
+                    });
+                    slotSel.disabled = false;
+                    slotMsg.textContent = slots.length + ' slot(s) available';
+                    slotMsg.style.color = '#2b8a3e';
+                }
+                checkReady();
+            })
+            .catch(function() {
+                slotSel.innerHTML = '<option value="">Error loading slots</option>';
+                slotMsg.textContent = 'Could not load slots. Refresh and try again.';
+                slotMsg.style.color = '#c92a2a';
+                checkReady();
+            });
+    }
+
+    function tryLoad() {
+        if (docSel.value && dateSel.value) {
+            loadSlots(docSel.value, dateSel.value, '');
+        }
+    }
+
+    docSel.addEventListener('change',  tryLoad);
+    dateSel.addEventListener('change', tryLoad);
+    slotSel.addEventListener('change', checkReady);
+    patSel.addEventListener('change',  checkReady);
+
+    /* restore state on POST error re-render */
+    if (preDoctor && preDate) {
+        docSel.value  = preDoctor;
+        dateSel.value = preDate;
+        loadSlots(preDoctor, preDate, preSlot);
+    }
+
+    checkReady();
+}());
+</script>
+
+</body>
+</html>

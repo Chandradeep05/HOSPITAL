@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% from '_pagination.html' import render_pagination %}
 <head>
     <meta charset="UTF-8">
     <title>Registered Doctors</title>
@@ -90,16 +91,24 @@
                         <th>Department</th>
                         <th>Phone</th>
                         <th>ID</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for doctor in doctors %}
                     <tr>
-                        <td>{{ doctor[0] }}</td>
-                        <td>{{ doctor[1] }}</td>
-                        <td>{{ doctor[2] }}</td>
-                        <td>{{ doctor[3] }}</td>
-                        <td>{{ doctor[4] }}</td>
+                        <td>{{ doctor.name }}</td>
+                        <td>{{ doctor.age }}</td>
+                        <td>{{ doctor.department or '—' }}</td>
+                        <td>{{ doctor.phone or '—' }}</td>
+                        <td>{{ doctor.id }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_doctor', did=doctor.id) }}"
+                               style="background:#2b8a3e;color:white;padding:5px 12px;
+                                      border-radius:4px;text-decoration:none;font-size:13px;">
+                               <i class="fa fa-edit"></i> Edit
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -108,6 +117,17 @@
         {% else %}
             <p>No doctor records found.</p>
         {% endif %}
+        {% if pagination %}
+        {{ render_pagination(pagination, 'view_doctors') }}
+        {% endif %}
+
+        <div style="margin-top:14px;">
+            <a href="{{ url_for('export_csv', entity='doctors') }}"
+               style="display:inline-block;padding:8px 16px;background:#1864ab;color:white;
+                      border-radius:5px;text-decoration:none;font-size:13px;font-weight:bold;">
+                <i class="fa fa-download"></i> Export CSV
+            </a>
+        </div>
 
         <a href="{{ url_for('dashboard') }}" class="back-button">Back to Dashboard</a>
     </div>

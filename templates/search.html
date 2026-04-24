@@ -2,154 +2,187 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Search Records</title>
+    <title>Search Records — HSMS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-image: url('{{ url_for('static', filename='images/search_bg.jpg') }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='images/search_bg.jpg') }}");
+            background-size: cover; background-position: center;
+            background-repeat: no-repeat; min-height: 100vh;
+            margin: 0; display: flex; justify-content: center;
+            align-items: flex-start; padding: 40px 16px;
         }
-
-
         .search-container {
-            background: #f9f9f9;
-            padding: 30px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            width: 600px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            background: rgba(255,255,255,0.97);
+            padding: 32px 30px; border-radius: 12px;
+            width: 100%; max-width: 760px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.13);
         }
-
-        h1 {
-            color: #2b8a3e;
-            margin-bottom: 20px;
+        h1 { color: #2b8a3e; margin-bottom: 22px; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-grid .full { grid-column: 1 / -1; }
+        label { display: block; font-size: 12px; font-weight: 700; color: #555; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+        select, input[type="text"], input[type="date"] {
+            width: 100%; padding: 9px 12px; border-radius: 7px;
+            border: 1px solid #dee2e6; font-size: 14px;
+            background: #f8f9fa; color: #212529; outline: none;
+            transition: border-color .2s, box-shadow .2s;
         }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            text-align: left;
+        select:focus, input:focus { border-color: #2b8a3e; box-shadow: 0 0 0 3px rgba(43,138,62,0.12); background: #fff; }
+        .btn-row { display: flex; gap: 10px; margin-top: 14px; }
+        button[type="submit"] {
+            flex: 1; padding: 10px; background: #2b8a3e; color: #fff;
+            border: none; border-radius: 7px; font-size: 14px; font-weight: 700; cursor: pointer;
+            transition: background .2s;
         }
-
-        select,
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #2b8a3e;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #23732f;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #d6eadf;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #2b8a3e;
-            font-weight: bold;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .no-results {
-            margin-top: 15px;
-            color: red;
-            font-weight: bold;
-        }
+        button[type="submit"]:hover { background: #1e6b2e; }
+        .btn-reset { padding: 10px 18px; background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; border-radius: 7px; font-size: 14px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: background .2s; }
+        .btn-reset:hover { background: #e9ecef; }
+        /* Extra filters row (conditional) */
+        .extra-filters { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* Results table */
+        .results-section { margin-top: 26px; }
+        .results-count { font-size: 13px; color: #6c757d; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+        th { background: #f1f8f3; color: #2b8a3e; font-weight: 700; padding: 10px 12px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid #d3f9d8; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f1f3f5; color: #343a40; }
+        tr:hover td { background: #f8fffe; }
+        .no-results { text-align: center; padding: 30px; color: #868e96; }
+        .no-results i { font-size: 32px; display: block; margin-bottom: 10px; opacity: .4; }
+        .status-badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .status-scheduled { background: #d3f9d8; color: #1e6b2e; }
+        .status-cancelled  { background: #ffe3e3; color: #c92a2a; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; text-decoration: none; color: #2b8a3e; font-weight: 600; font-size: 13px; }
+        .back-link:hover { text-decoration: underline; }
+        /* Show/hide extra filter fields via JS */
+        .dept-filter, .date-filter { display: none; }
     </style>
 </head>
 <body>
-
 <div class="search-container">
-    <h1>Search Records</h1>
+    <h1><i class="fa fa-magnifying-glass"></i> Search Records</h1>
 
-    <form method="POST">
-        <label for="record_type">Type:</label>
-        <select name="record_type" id="record_type" required>
-            <option value="">--Select--</option>
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="worker">Worker</option>
-        </select>
+    <form method="POST" id="searchForm">
+        <div class="form-grid">
+            <div>
+                <label for="record_type">Record Type</label>
+                <select name="record_type" id="record_type" required>
+                    <option value="">-- Select Type --</option>
+                    <option value="patient"     {% if record_type=='patient'     %}selected{% endif %}>Patient</option>
+                    <option value="doctor"      {% if record_type=='doctor'      %}selected{% endif %}>Doctor</option>
+                    <option value="worker"      {% if record_type=='worker'      %}selected{% endif %}>Worker</option>
+                    <option value="appointment" {% if record_type=='appointment' %}selected{% endif %}>Appointment</option>
+                </select>
+            </div>
+            <div>
+                <label for="query">Search Query</label>
+                <input type="text" name="query" id="query" placeholder="Name, ID, reason…"
+                       value="{{ query or '' }}">
+            </div>
+        </div>
 
-        <label for="query">Query:</label>
-        <input type="text" name="query" id="query" required>
+        <!-- Department filter (doctors only) -->
+        <div class="extra-filters dept-filter" id="deptFilter">
+            <div class="full" style="grid-column:1/-1;">
+                <label for="department">Filter by Department</label>
+                <select name="department" id="department">
+                    <option value="">-- All Departments --</option>
+                    {% for dept in departments %}
+                    <option value="{{ dept }}" {% if department_f==dept %}selected{% endif %}>{{ dept }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
-        <button type="submit">Search</button>
+        <!-- Date filter (appointments only) -->
+        <div class="extra-filters date-filter" id="dateFilter">
+            <div class="full" style="grid-column:1/-1;">
+                <label for="date">Filter by Date</label>
+                <input type="date" name="date" id="date" value="{{ date_f or '' }}">
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button type="submit"><i class="fa fa-search"></i> Search</button>
+            <a href="{{ url_for('search') }}" class="btn-reset"><i class="fa fa-rotate-left"></i> Reset</a>
+        </div>
     </form>
 
-    {% if search_performed %}
-        {% if results %}
-            <table>
-                <thead>
-                    <tr>
-                        {% if record_type == 'patient' %}
-                            <th>Name</th><th>Age</th><th>Issue</th><th>Phone</th><th>ID</th><th>Gender</th>
-                        {% elif record_type == 'doctor' %}
-                            <th>Name</th><th>Age</th><th>Department</th><th>Phone</th><th>ID</th>
-                        {% elif record_type == 'worker' %}
-                            <th>Name</th><th>Age</th><th>Position</th><th>Phone</th><th>ID</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in results %}
-                        <tr>
-                            {% for item in row %}
-                                <td>{{ item }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="no-results">No records found.</p>
-        {% endif %}
+    {% if search_hint %}
+    <div class="no-results" style="color:#e67700;background:#fff4e6;border-radius:8px;padding:14px 18px;margin-top:22px;display:flex;align-items:center;gap:10px;">
+        <i class="fa fa-circle-info"></i> {{ search_hint }}
+    </div>
     {% endif %}
 
-    <a class="back-link" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    {% if search_performed %}
+    <div class="results-section">
+        {% if results %}
+        <div class="results-count"><i class="fa fa-list-ul"></i> {{ results|length }} result(s) found for <strong>{{ record_type }}</strong>.</div>
+        <table>
+            <thead>
+                <tr>
+                    {% if record_type == 'patient' %}
+                        <th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Diagnosis</th><th>Phone</th>
+                    {% elif record_type == 'doctor' %}
+                        <th>ID</th><th>Name</th><th>Age</th><th>Department</th><th>Phone</th>
+                    {% elif record_type == 'worker' %}
+                        <th>ID</th><th>Name</th><th>Age</th><th>Role</th><th>Phone</th>
+                    {% elif record_type == 'appointment' %}
+                        <th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr>
+                    {% if record_type == 'patient' %}
+                        <td>{{ row.id }}</td><td>{{ row.name }}</td><td>{{ row.age }}</td>
+                        <td>{{ row.gender or '—' }}</td><td>{{ row.problem or '—' }}</td><td>{{ row.phone or '—' }}</td>
+                    {% elif record_type == 'doctor' %}
+                        <td>{{ row.id }}</td><td>{{ row.name }}</td><td>{{ row.age }}</td>
+                        <td>{{ row.department or '—' }}</td><td>{{ row.phone or '—' }}</td>
+                    {% elif record_type == 'worker' %}
+                        <td>{{ row.id }}</td><td>{{ row.name }}</td><td>{{ row.age }}</td>
+                        <td>{{ row.work_type or '—' }}</td><td>{{ row.phone or '—' }}</td>
+                    {% elif record_type == 'appointment' %}
+                        <td>{{ row.appt_date }}</td><td>{{ row.appt_time }}</td>
+                        <td>{{ row.patient.name if row.patient else row.patient_id }}</td>
+                        <td>Dr. {{ row.doctor.name if row.doctor else row.doctor_id }}</td>
+                        <td>{{ row.reason or '—' }}</td>
+                        <td><span class="status-badge {% if row.status=='Scheduled' %}status-scheduled{% else %}status-cancelled{% endif %}">{{ row.status }}</span></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-results">
+            <i class="fa fa-circle-xmark"></i>
+            <p>No records found matching your search.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <a class="back-link" href="{{ url_for('dashboard') }}"><i class="fa fa-arrow-left"></i> Back to Dashboard</a>
 </div>
 
+<script>
+(function(){
+    var typeSelect = document.getElementById('record_type');
+    var deptFilter = document.getElementById('deptFilter');
+    var dateFilter = document.getElementById('dateFilter');
+
+    function toggleFilters() {
+        deptFilter.style.display = (typeSelect.value === 'doctor')      ? 'grid' : 'none';
+        dateFilter.style.display = (typeSelect.value === 'appointment') ? 'grid' : 'none';
+    }
+
+    typeSelect.addEventListener('change', toggleFilters);
+    toggleFilters(); // run on page load to restore state after POST
+}());
+</script>
 </body>
 </html>
