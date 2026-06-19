@@ -32,6 +32,21 @@ if _db_url.startswith('postgres://'):
 app.config['SQLALCHEMY_DATABASE_URI'] = _db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# PostgreSQL / Supabase connection-pool tuning
+if _db_url.startswith('postgresql://'):
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping': True,       # detect stale connections before use
+        'pool_recycle': 280,         # recycle connections before Supabase timeout (300s)
+        'pool_size': 5,              # sensible default for free tier
+        'max_overflow': 2,           # allow 2 extra connections under burst
+        'connect_args': {
+            'sslmode': 'require',    # Supabase requires SSL
+        },
+    }
+    print(f"[HSMS] Using PostgreSQL: {_db_url.split('@')[1] if '@' in _db_url else '(configured)'}")
+else:
+    print(f"[HSMS] Using SQLite: {_db_url}")
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -1026,10 +1041,34 @@ def export_csv(entity):
 # ──────────────────────────────────────────────
 
 # FIX: module-level so Gunicorn triggers it on import (not just __main__).
-# FIX: removed try/except so DB init failures crash loudly and appear in Render logs.
+_db_initialized = False
+
+def _ensure_db():
+    """Ensure DB tables exist. Safe to call multiple times."""
+    global _db_initialized
+    if _db_initialized:
+        return
+    try:
+        init_db()
+        seed_data()
+        _db_initialized = True
+        print("[HSMS] Database initialized successfully.")
+    except Exception as e:
+        logging.error(f"[HSMS] DB init failed: {e}")
+        raise
+
+# Attempt init at import time (works for most deployments)
 with app.app_context():
-    init_db()
-    seed_data()
+    try:
+        _ensure_db()
+    except Exception as e:
+        logging.warning(f"[HSMS] DB init deferred — will retry on first request: {e}")
+
+@app.before_request
+def _before_request_db_check():
+    """Retry DB init if it failed at startup (e.g. Supabase cold start)."""
+    if not _db_initialized:
+        _ensure_db()
 
 
 # ──────────────────────────────────────────────
