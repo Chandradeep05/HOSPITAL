@@ -41,6 +41,7 @@ if _db_url.startswith('postgresql://'):
         'max_overflow': 2,           # allow 2 extra connections under burst
         'connect_args': {
             'sslmode': 'require',    # Supabase requires SSL
+            'options': '-c statement_timeout=30000',  # 30s query timeout
         },
     }
     print(f"[HSMS] Using PostgreSQL: {_db_url.split('@')[1] if '@' in _db_url else '(configured)'}")
